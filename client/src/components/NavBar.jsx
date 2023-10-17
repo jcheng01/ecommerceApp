@@ -1,10 +1,10 @@
 import React from "react";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaShoppingCart } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
 export const NavBar = () => {
   return (
-    <nav>
+    <nav className="bg-slate-200 shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
         <Link to="/">
           <h1 className="font-bold text-sm sm:text-xl flex flex-wrap">
@@ -27,19 +27,24 @@ export const NavBar = () => {
             <FaSearch className="text-slate-600" />
           </button>
         </form>
-        <ul className="flex gap-4">
-          <Link to="/about">
+        <ul className="flex gap-4 items-center">
+          <Link to="/cart">
             <li className="hidden sm:inline text-slate-700 hover:underline">
-              About
+              <FaShoppingCart />
             </li>
           </Link>
-          <Link to="/profile">
+          <Link to="/signin">
+            <li className="hidden sm:inline text-slate-700 hover:underline">
+              Sign In
+            </li>
+          </Link>
+          {/* <Link to="/profile">
             <img
               className="rounded-full h-7 w-7 object-cover"
-              //   src={currentUser.avatar}
+                src={currentUser.avatar}
               alt="profile"
             />
-          </Link>
+          </Link> */}
         </ul>
       </div>
     </nav>
