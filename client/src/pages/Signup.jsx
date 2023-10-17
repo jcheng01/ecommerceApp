@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Button from "../components/Button";
 
 const Signup = () => {
   const [data, setData] = useState({});
