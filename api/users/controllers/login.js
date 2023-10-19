@@ -4,27 +4,25 @@ import jsonwebtoken from "jsonwebtoken";
 import jwtHandler from "../../handlers/jwtHandler.js";
 
 const login = async (req, res) => {
-  const usersModel = mongoose.model("users");
+  const userModel = mongoose.model("users");
   const { email, password } = req.body;
 
-  const getUser = await usersModel.findOne({
-    //method to find the email from payload in the db
+  const getUser = await userModel.findOne({
     email,
-  });
-
+  }); //method to find the user object with the email from req
   if (!getUser) throw "Email does not exist"; //validates
 
-  const comparePW = await bycrypt.compare(password, getUser.password); //returns boolean
-
+  const comparePW = await bcrypt.compare(password, getUser.password); //returns boolean
   if (!comparePW) throw "password does not match";
 
   const accessToken = jwtHandler(getUser);
+  // console.log(getUser);
 
   //success response
   res.status(200).json({
     status: "success",
     message: "User logged in",
-    accessToken: accessToken, //passing the access token as a response
+    accessToken, //passing the access token as a response
   });
 };
 

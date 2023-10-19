@@ -2,7 +2,11 @@ import React from "react";
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 
-export const NavBar = () => {
+export const NavBar = (props) => {
+  const cartCount = props.cart.reduce(
+    (total, product) => total + product.quantity,
+    0
+  );
   return (
     <nav className="bg-slate-200 shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
@@ -29,8 +33,8 @@ export const NavBar = () => {
         </form>
         <ul className="flex gap-4 items-center">
           <Link to="/cart">
-            <li className="hidden sm:inline text-slate-700 hover:underline">
-              <FaShoppingCart />
+            <li className="flex sm:inline text-slate-700 hover:underline">
+              <FaShoppingCart />({cartCount})
             </li>
           </Link>
           <Link to="/signin">

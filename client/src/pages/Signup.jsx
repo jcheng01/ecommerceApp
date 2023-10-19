@@ -5,15 +5,26 @@ const Signup = () => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  };
-
   const handleChange = (e) => {
     setData({
       ...data,
       [e.target.id]: e.target.value,
     });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("/api/user/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const data = await res;
+      console.log(data);
+    } catch (error) {}
   };
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -43,7 +54,7 @@ const Signup = () => {
         <input
           type="password"
           placeholder="Confirm Password"
-          id="password"
+          id="confirmPW"
           className="border p-3 rounded-lg"
           onChange={handleChange}
         />

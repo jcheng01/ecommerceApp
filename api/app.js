@@ -7,6 +7,8 @@ import express from "express";
 import dotenv from "dotenv"; // imported so we can use .env file to safley store mongo token
 dotenv.config();
 
+import usersModel from "./models/users.models.js";
+
 mongoose
   .connect(process.env.MONGO)
   .then(() => {
