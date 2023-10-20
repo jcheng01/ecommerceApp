@@ -14,7 +14,7 @@ function App() {
   useEffect(() => {
     // to visualize the cart in the console every time in changes
     // you can also use React dev tools
-    console.log(cart);
+    // console.log(cart);
   }, [cart]);
 
   function handleProductAdd(newProduct) {
@@ -34,7 +34,7 @@ function App() {
         return product;
       });
       setCart(updatedCart);
-      console.log(cart);
+      // console.log(cart);
     } else {
       // product is new to the cart
       setCart([
@@ -46,17 +46,16 @@ function App() {
       ]);
     }
   }
-
   function handleProductDelete(id) {
-    console.log(id);
-    const item = cart.filter((product) => {
-      if (product.id !== id) {
-        console.log(product);
-      }
-    });
-    console.log(item);
-
-    setCart(item);
+    const updatedCart = cart.filter((product) => product.id !== id);
+    setCart(
+      updatedCart.map((item) => {
+        return {
+          ...item,
+          quantity: item.quantity > 0 ? item.quantity - 1 : item.quantity,
+        };
+      })
+    );
   }
 
   return (
@@ -80,6 +79,7 @@ function App() {
             <Route path="/cart" element={<Cart cart={cart} />}></Route>
             <Route path="/signup" element={<Signup />}></Route>
             <Route path="/signin" element={<Signin />}></Route>
+            {/* <Route path="/pay"></Route> */}
           </Routes>
         </main>
       </BrowserRouter>

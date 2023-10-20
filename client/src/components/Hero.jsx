@@ -17,12 +17,12 @@ const Hero = () => {
             <br /> sellers, manufacturers and brands around the world with the
             mission to empower them to live their best lives.
           </div>
-          <Link
+          {/* <Link
             to={"/search"}
             className="text-xs sm:text-sm text-blue-800 font-bold hover:underline"
           >
             Click to browse...
-          </Link>
+          </Link> */}
         </div>
         <img
           src={img}

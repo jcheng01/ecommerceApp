@@ -4,18 +4,47 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Signin = () => {
   const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({});
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setData({
+      ...data,
       [e.target.id]: e.target.value,
     });
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch("http://localhost:5174/api/user/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      // console.log(data);
+      const datajson = await res;
+      console.log(datajson);
+      // console.log(JSON.stringify(data));
+      // if (datajson.success === false) {
+      //   console.log("Login successful:", data.message);
+      //   // setMessage("Login successful!");
+      //   // You might handle navigation or store a token here
+      // }
+      // navigate("/");
+    } catch (error) {
+      console.log("Login error:", error);
+      // setMessage("Login failed. Please try again.");
+    }
+  };
+
   return (
     <>
       <div className="p-3 max-w-lg mx-auto">
         <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           <input
             type="email"
             placeholder="email"

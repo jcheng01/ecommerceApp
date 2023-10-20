@@ -32,11 +32,13 @@ export const NavBar = (props) => {
           </button>
         </form>
         <ul className="flex gap-4 items-center">
-          <Link to="/cart">
-            <li className="flex sm:inline text-slate-700 hover:underline">
-              <FaShoppingCart />({cartCount})
+          <Link to="/cart" className="flex items-center">
+            <li className="sm:inline text-slate-700 hover:underline">
+              <FaShoppingCart />
             </li>
+            ({cartCount})
           </Link>
+
           <Link to="/signin">
             <li className="hidden sm:inline text-slate-700 hover:underline">
               Sign In

@@ -7,6 +7,10 @@ import express from "express";
 import dotenv from "dotenv"; // imported so we can use .env file to safley store mongo token
 dotenv.config();
 
+import cors from "cors";
+
+// import stripe from ("stripe")(process.env.stripekey);
+
 import usersModel from "./models/users.models.js";
 
 mongoose
@@ -21,11 +25,12 @@ const app = express();
 app.use(express.json()); //use the json middleware to parse incoming payloads
 
 app.use("/api/user", userRoutes);
+app.use(cors());
 
 //end of all routes
 
 app.use(errorHandler); // middleware handler
 
-app.listen(9000, () => {
-  console.log("Server 9000 started success!");
+app.listen(5174, () => {
+  console.log("Server 5174 started success!");
 });
