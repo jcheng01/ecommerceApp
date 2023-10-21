@@ -20,11 +20,12 @@ const Cart = (props) => {
     event.preventDefault();
 
     // Call your server to create a checkout session\
-    fetch("http://localhost:5174/api/user/create-checkout-session", {
+    fetch("/api/user/create-checkout-session", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      mode: "cors",
       body: JSON.stringify(props.cart),
     })
       .then(async (res) => {
@@ -33,7 +34,8 @@ const Cart = (props) => {
         return await Promise.reject(json);
       })
       .then(({ url }) => {
-        window.location = url;
+        // window.location = url;
+        console.log(url);
       })
       .catch((error) => {
         console.log(error);

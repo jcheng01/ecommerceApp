@@ -17,17 +17,16 @@ const Signin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:5174/api/user/login", {
+      const res = await fetch("/api/user/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-      // console.log(data);
       const datajson = await res;
       console.log(datajson);
-      // console.log(JSON.stringify(data));
+      console.log(JSON.stringify(data));
       // if (datajson.success === false) {
       //   console.log("Login successful:", data.message);
       //   // setMessage("Login successful!");
@@ -36,7 +35,7 @@ const Signin = () => {
       // navigate("/");
     } catch (error) {
       console.log("Login error:", error);
-      // setMessage("Login failed. Please try again.");
+      setMessage("Login failed. Please try again.");
     }
   };
 
