@@ -1,4 +1,3 @@
-import fetch from "node-fetch"; // if you're using node-fetch to make HTTP requests
 import Stripe from "stripe";
 import dotenv from "dotenv"; // imported so we can use .env file to safley store mongo token
 dotenv.config();
@@ -6,14 +5,9 @@ dotenv.config();
 const stripe = new Stripe(process.env.stripekey);
 
 const pay = async (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   try {
-    // Step 1: Fetch information from the other API
-    const response = await fetch("https://fakestoreapi.com/products");
-    const data = await response.json();
-
-    const cart = data;
-    const lineItems = cart.map((product) => ({
+    const lineItems = req.body.map((product) => ({
       price_data: {
         currency: "usd",
         product_data: {
@@ -23,7 +17,7 @@ const pay = async (req, res) => {
         },
         unit_amount: product.price * 100,
       },
-      quantity: 1,
+      quantity: product.quantity,
     }));
 
     // Step 3: Create the checkout session with the line items
@@ -35,7 +29,7 @@ const pay = async (req, res) => {
       cancel_url: "http://localhost:5174",
     });
 
-    res.json({ sessionId: session.id });
+    res.json({ url: session.url });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

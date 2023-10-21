@@ -8,6 +8,13 @@ import dotenv from "dotenv"; // imported so we can use .env file to safley store
 dotenv.config();
 
 import cors from "cors";
+const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5174",
+  })
+);
 
 // import stripe from ("stripe")(process.env.stripekey);
 
@@ -20,12 +27,9 @@ mongoose
   })
   .catch((error) => console.log(error)); //chain promises to see if db is connected
 
-const app = express();
-
 app.use(express.json()); //use the json middleware to parse incoming payloads
 
 app.use("/api/user", userRoutes);
-app.use(cors());
 
 //end of all routes
 

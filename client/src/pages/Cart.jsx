@@ -19,37 +19,62 @@ const Cart = (props) => {
   function handleFormSubmit(event) {
     event.preventDefault();
 
-    // Call your server to create a checkout session
-    fetch("/api/user/create-checkout-session", {
+    // Call your server to create a checkout session\
+    fetch("http://localhost:5174/api/user/create-checkout-session", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ cart: props.cart }),
+      body: JSON.stringify(props.cart),
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`Server responded with a ${res.status} status.`);
-        }
-        return res.text().then((text) => (text ? JSON.parse(text) : {}));
+      .then(async (res) => {
+        if (res.ok) return res.json();
+        const json = await res.json();
+        return await Promise.reject(json);
       })
-      .then((data) => {
-        const sessionId = data.sessionId;
-        console.log(sessionId);
-        stripePromise.then((stripe) => {
-          stripe
-            .redirectToCheckout({ sessionId: sessionId })
-            .then((response) => {
-              if (response.error) {
-                console.log(response.error);
-              }
-            });
-        });
+      .then(({ url }) => {
+        window.location = url;
       })
       .catch((error) => {
         console.log(error);
       });
   }
+
+  // function handleFormSubmit(event) {
+  //   event.preventDefault();
+
+  //   const lineItems = props.cartmap((product) => ({
+  //     price_data: {
+  //       currency: "usd",
+  //       product_data: {
+  //         name: product.title,
+  //         description: product.description, // Assuming you have a 'description' in your product object
+  //         images: [product.image],
+  //       },
+  //       unit_amount: product.price * 100,
+  //     },
+  //     quantity: product.quantity,
+  //   }));
+
+  //   stripePromise.then((stripe) => {
+  //     stripe
+  //       .redirectToCheckout({
+  //         lineItems: lineItems,
+  //         mode: "payment",
+  //         successUrl: "http://localhost:5174",
+  //         cancelUrl: "http://localhost:5174",
+  //         customerEmail: email,
+  //       })
+  //       .then((response) => {
+  //         // this will only log if the redirect did not work
+  //         console.log(response.error);
+  //       })
+  //       .catch((error) => {
+  //         // wrong API key? you will see the error message here
+  //         console.log(error);
+  //       });
+  //   });
+  // }
 
   return (
     <div className="m-32">

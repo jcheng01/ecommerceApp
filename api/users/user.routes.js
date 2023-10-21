@@ -11,8 +11,8 @@ const userRoutes = Router();
 
 userRoutes.post("/register", register);
 userRoutes.post("/login", login);
-userRoutes.get("/signout", signout);
 userRoutes.post("/create-checkout-session", pay);
+userRoutes.get("/signout", signout);
 
 // userRoutes.use(auth); /// every route after this middleware willbe controller by the auth
 
