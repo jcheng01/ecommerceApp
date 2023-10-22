@@ -7,14 +7,14 @@ import express from "express";
 import dotenv from "dotenv"; // imported so we can use .env file to safley store mongo token
 dotenv.config();
 
-import cors from "cors";
+// import cors from "cors";
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:5174",
-  })
-);
+// app.use(
+//   cors({
+//     origin: "http://localhost:5174",
+//   })
+// );
 
 // import stripe from ("stripe")(process.env.stripekey);
 

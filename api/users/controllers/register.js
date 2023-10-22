@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwtHandler from "../../handlers/jwtHandler.js";
+import User from "../../models/users.models.js";
 
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   const userModel = mongoose.model("users");
 
   const { email, username, password, confirmPW } = req.body;
@@ -19,21 +20,21 @@ const register = async (req, res) => {
   });
   if (getDupEmail) throw "This Email Exists";
 
-  const hashedPW = await bcrypt.hash(password, 6);
+  const hashedPW = bcrypt.hashSync(password, 10);
 
-  const createdUser = await userModel.create({
-    username,
-    email,
-    password: hashedPW,
-  });
+  const newUser = new User({ username, email, password: hashedPW });
 
-  const accessToken = jwtHandler(createdUser); //centralizing process of accesss token
+  const accessToken = jwtHandler(newUser); //centralizing process of accesss token
 
-  res.status(200).json({
-    status: "success on register",
-    accessToken,
-    // createdUser,
-  });
+  try {
+    await newUser.save();
+    res.status(200).json({
+      status: "success on register",
+      accessToken,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export default register;

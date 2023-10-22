@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 const Signup = () => {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setData({
@@ -15,6 +16,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const res = await fetch("/api/user/register", {
         method: "POST",
         headers: {
@@ -22,9 +24,19 @@ const Signup = () => {
         },
         body: JSON.stringify(data),
       });
-      const data = await res;
-      console.log(data);
-    } catch (error) {}
+
+      console.log(res.status);
+
+      if (res.ok) {
+        const responseData = await res.json();
+        console.log(responseData);
+        return;
+      }
+      navigate("/signin");
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
   return (
     <div className="p-3 max-w-lg mx-auto">

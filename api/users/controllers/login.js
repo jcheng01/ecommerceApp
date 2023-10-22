@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import jsonwebtoken from "jsonwebtoken";
+// import jsonwebtoken from "jsonwebtoken";
 import jwtHandler from "../../handlers/jwtHandler.js";
 
 const login = async (req, res) => {

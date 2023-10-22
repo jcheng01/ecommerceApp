@@ -1,7 +1,6 @@
 import Stripe from "stripe";
 import dotenv from "dotenv"; // imported so we can use .env file to safley store mongo token
 dotenv.config();
-
 const stripe = new Stripe(process.env.stripekey);
 
 const pay = async (req, res) => {
@@ -25,8 +24,8 @@ const pay = async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: "http://localhost:5174",
-      cancel_url: "http://localhost:5174",
+      success_url: `${process.env.REACT_APP_CLIENT_URL}/products`,
+      cancel_url: `${process.env.REACT_APP_CLIENT_URL}/products`,
     });
 
     res.json({ url: session.url });

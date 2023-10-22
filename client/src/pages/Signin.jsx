@@ -17,6 +17,7 @@ const Signin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const res = await fetch("/api/user/login", {
         method: "POST",
         headers: {
@@ -27,13 +28,15 @@ const Signin = () => {
       const datajson = await res;
       console.log(datajson);
       console.log(JSON.stringify(data));
-      // if (datajson.success === false) {
-      //   console.log("Login successful:", data.message);
-      //   // setMessage("Login successful!");
-      //   // You might handle navigation or store a token here
-      // }
-      // navigate("/");
+      if (datajson.ok === true) {
+        console.log("Login successful:", data.statusText);
+        // setMessage("Login successful!");
+        // You might handle navigation or store a token here
+      }
+      setLoading(false);
+      navigate("/");
     } catch (error) {
+      setLoading(false);
       console.log("Login error:", error);
       setMessage("Login failed. Please try again.");
     }

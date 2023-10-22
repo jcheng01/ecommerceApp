@@ -1,11 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import { loadStripe } from "@stripe/stripe-js";
-import { Link } from "react-router-dom";
-
-const stripePromise = loadStripe(
-  "pk_test_51NtEvBDJSwItgo0npF2OrKSZaFv1YlrqacalKImEiTs8P26KdYxWStXbqHav0F6nM4pfEBpzBrNA5oqrIhx3HTiP006tFHfzu6"
-);
+// import { loadStripe } from "@stripe/stripe-js";
+import { Link, useNavigate } from "react-router-dom";
 
 const Cart = (props) => {
   const totalPrice = props.cart.reduce(
@@ -13,34 +9,72 @@ const Cart = (props) => {
       parseFloat((total + product.price * product.quantity).toFixed(2)),
     0
   );
+  // const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const [email, setEmail] = useState("");
 
-  function handleFormSubmit(event) {
+  const handleFormSubmit = async (event) => {
+    console.log("clicked");
     event.preventDefault();
 
-    // Call your server to create a checkout session\
-    fetch("/api/user/create-checkout-session", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      mode: "cors",
-      body: JSON.stringify(props.cart),
-    })
-      .then(async (res) => {
-        if (res.ok) return res.json();
-        const json = await res.json();
-        return await Promise.reject(json);
-      })
-      .then(({ url }) => {
-        // window.location = url;
-        console.log(url);
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      setLoading(true);
+      const response = await fetch("/api/user/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // mode: "cors",
+        body: JSON.stringify(props.cart),
       });
-  }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Server responded with an error");
+      }
+
+      const { url } = await response.json();
+      window.location = url;
+      console.log(url);
+    } catch (error) {
+      console.error(error.message || error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // const handleFormSubmit = async (event) => {
+  //   event.preventDefault();
+  //   // try {
+  //   setLoading(true);
+  //   // Call your server to create a checkout session\
+  //   await fetch("/api/user/create-checkout-session", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     mode: "cors",
+  //     body: JSON.stringify(props.cart),
+  //   })
+  //     .then(async (res) => {
+  //       if (res.ok) return res.json();
+  //       const json = await res.json();
+  //       return await Promise.reject(json);
+  //     })
+  //     .then(({ url }) => {
+  //       window.location = url;
+  //       console.log(url);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error.error);
+  //     });
+  //   // setLoading(false);
+  //   // setError(null);
+  //   // } catch (error) {
+  //   // setLoading(false);
+  //   // }
+  // };
 
   // function handleFormSubmit(event) {
   //   event.preventDefault();
@@ -151,6 +185,7 @@ const Cart = (props) => {
               <button
                 type="submit"
                 className="px-8 bg-slate-700 text-neutral-50 mx-4"
+                disabled={loading}
               >
                 Pay
               </button>
