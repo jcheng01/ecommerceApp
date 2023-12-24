@@ -1,40 +1,42 @@
-import "express-async-errors";
+require("express-async-errors"); //express has no middleware to handle errors, typically done all errors handled in each controller
 
-import errorHandler from "./handlers/errorHandler.js";
-import userRoutes from "./users/user.routes.js";
-import mongoose from "mongoose"; //import the database
-import express from "express";
-import dotenv from "dotenv"; // imported so we can use .env file to safley store mongo token
-dotenv.config();
-
-// import cors from "cors";
-const app = express();
-
-// app.use(
-//   cors({
-//     origin: "http://localhost:5174",
-//   })
-// );
-
-// import stripe from ("stripe")(process.env.stripekey);
-
-import usersModel from "./models/users.models.js";
+const express = require("express"); //import the express framwork for node
+const app = express(); //creates the instance of the obj
+const mongoose = require("mongoose"); //import the db
+const errorHandler = require("./handlers/errorHandler"); //import the error middleware to catch errors from any routes
+require("dotenv").config(); //make env variables availible
 
 mongoose
-  .connect(process.env.MONGO)
+  .connect(process.env.MONGO, {})
   .then(() => {
-    console.log("Connected to mongo");
+    console.log("Connected to MongoDB");
   })
-  .catch((error) => console.log(error)); //chain promises to see if db is connected
+  .catch((error) => {
+    console.error("Failed to connect to MongoDB:", error);
+  });
 
-app.use(express.json()); //use the json middleware to parse incoming payloads
+//Models
+require("./models/users.models");
 
-app.use("/api/user", userRoutes);
+app.use(express.json()); //use the json middleware to parse incoming payloads, need it for post requests
+
+const cors = require("cors");
+app.use(cors()); // Use this before your routes are set up
+
+//Routes
+const usersRoutes = require("./users/user.routes");
+app.use("/api/users", usersRoutes);
 
 //end of all routes
+app.all("*", (req, res, next) => {
+  res.status(404).json({
+    status: "failed",
+    message: "page not found",
+  });
+});
 
-app.use(errorHandler); // middleware handler
+app.use(errorHandler);
 
-app.listen(5174, () => {
-  console.log("Server 5174 started success!");
+app.listen(3000, () => {
+  console.log(`Server started on port 3000`);
 });

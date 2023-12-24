@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 //import mongoose so we can create object schema for how the data is structured
 //the model contains the data structure
 const userSchema = new mongoose.Schema(
@@ -31,4 +31,4 @@ const userSchema = new mongoose.Schema(
 
 const usersModel = mongoose.model("users", userSchema);
 
-export default usersModel;
+module.exports = usersModel;

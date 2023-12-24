@@ -1,10 +1,10 @@
-import Stripe from "stripe";
-import dotenv from "dotenv"; // imported so we can use .env file to safley store mongo token
+const Stripe = require("stripe");
+const dotenv = require("dotenv"); // imported so we can use .env file to safley store mongo token
 dotenv.config();
 const stripe = new Stripe(process.env.stripekey);
 
 const pay = async (req, res) => {
-  // console.log(req.body);
+  console.log(req.body);
   try {
     const lineItems = req.body.map((product) => ({
       price_data: {
@@ -34,4 +34,4 @@ const pay = async (req, res) => {
   }
 };
 
-export default pay;
+module.exports = pay;

@@ -1,4 +1,6 @@
-const signout = async (req, res, next) => {
+const { model } = require("mongoose");
+
+const signOut = async (req, res, next) => {
   try {
     res.clearCookie("access_token");
     res.status(200).json("User has been logged out!");
@@ -7,4 +9,4 @@ const signout = async (req, res, next) => {
   }
 };
 
-export default signout;
+module.exports = signOut;

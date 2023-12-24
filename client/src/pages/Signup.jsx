@@ -2,82 +2,184 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const [data, setData] = useState({});
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    confirmEmail: "",
+    password: "",
+  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmpwError, setConfirmpwError] = useState("");
 
   const handleChange = (e) => {
-    setData({
-      ...data,
-      [e.target.id]: e.target.value,
-    });
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+  const buttonStyle = loading
+    ? "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline opacity-50"
+    : "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline";
+
+  const handlenameBlur = (e) => {
+    if (e.target.value.length < 6) {
+      setUsernameError("Should be at least 6 characters long");
+    } else if (!e.target.value.match(/.*[0-9].*/)) {
+      //match returns false if theres no num, but we want it to be true so the if statemtn executes
+      setUsernameError("Should contain a number");
+    } else {
+      setUsernameError("");
+    }
+  };
+  const handleemailBlur = (e) => {
+    if (!e.target.value) {
+      setEmailError("Email is required");
+    } else if (
+      !e.target.value.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+    ) {
+      //match returns false if theres no num, but we want it to be true so the if statemtn executes
+      setEmailError("Please enter valid email");
+    } else {
+      setEmailError("");
+    }
+  };
+  const handlepasswordBlur = (e) => {
+    if (e.target.value.length < 9) {
+      setPasswordError("Password should be more than 8 characters");
+    } else {
+      setPasswordError("");
+    }
+  };
+  const handleconfirmpwBlur = (e) => {
+    // console.log(formData, e.target.value);
+    if (e.target.value !== formData.password) {
+      setConfirmpwError("Passwords should match");
+    } else {
+      setConfirmpwError("");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData);
+
     try {
       setLoading(true);
-      const res = await fetch("/api/user/register", {
+      const res = await fetch("http://localhost:3000/api/users/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formData),
       });
-
-      console.log(res.status);
-
-      if (res.ok) {
-        const responseData = await res.json();
-        console.log(responseData);
-        return;
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      } else {
+        console.log("response good?");
       }
+      setLoading(false);
       navigate("/signin");
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      console.error("There was a problem with the fetch operation:", error);
     }
   };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
-      <h1 className="text-3xl text-center font-semibold my-7">Sign Up</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <input
-          type="text"
-          placeholder="Username"
-          id="username"
-          className="border p-3 rounded-lg"
-          onChange={handleChange}
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          id="email"
-          className="border p-3 rounded-lg"
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          id="password"
-          className="border p-3 rounded-lg"
-          onChange={handleChange}
-        />
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          id="confirmPW"
-          className="border p-3 rounded-lg"
-          onChange={handleChange}
-        />
-        <button
-          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
-          disabled={loading}
-        >
-          {loading ? "Loading ..." : "Sign Up"}
-        </button>
+      <h1 className="text-2xl font-bold mb-5 text-gray-800 my-16 text-center">
+        Sign Up
+      </h1>
 
-        {/* <OAuth /> */}
+      <form onSubmit={handleSubmit} className="flex flex-col">
+        <div className="mb-2 ">
+          <label
+            htmlFor="username"
+            className="block text-gray-700 text-sm font-bold "
+          >
+            Username
+          </label>
+          <input
+            type="text"
+            id="username"
+            required
+            className={`w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
+              usernameError && "border-red-500"
+            }`}
+            placeholder="jcheng01"
+            minLength="5"
+            pattern=".*[0-9].*"
+            title="Username must have 5 char and a number"
+            onChange={handleChange}
+            onBlur={handlenameBlur}
+          />
+          <p className="text-red-500 text-xs italic h-4">{usernameError}</p>
+        </div>
+        <div className="mb-2 ">
+          <label
+            htmlFor="email"
+            className="block text-gray-700 text-sm font-bold "
+          >
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            required
+            className={`w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
+              emailError && "border-red-500"
+            }`}
+            placeholder="jcheng01@syr.edu"
+            onChange={handleChange}
+            onBlur={handleemailBlur}
+          />
+          <p className="text-red-500 text-xs italic h-4">{emailError}</p>
+        </div>
+
+        <div className="mb-2 ">
+          <label
+            htmlFor="password"
+            className="block text-gray-700 text-sm font-bold "
+          >
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            required
+            className={`w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
+              passwordError && "border-red-500"
+            }`}
+            placeholder="password"
+            onChange={handleChange}
+            onBlur={handlepasswordBlur}
+          />
+          <p className="text-red-500 text-xs italic h-4">{passwordError}</p>
+        </div>
+        <div className="mb-6">
+          <label
+            htmlFor="confirmPW"
+            className="block text-gray-700 text-sm font-bold mb-2"
+          >
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            id="confirmPW"
+            required
+            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
+              confirmpwError && "border-red-500"
+            }`}
+            placeholder="password"
+            onChange={handleChange}
+            onBlur={handleconfirmpwBlur}
+          />
+          <p className="text-red-500 text-xs italic h-4">{confirmpwError}</p>
+        </div>
+        <button className={buttonStyle} type="submit" disabled={loading}>
+          Register
+        </button>
       </form>
       <div className="flex gap-2 mt-5">
         <p>Have an account?</p>

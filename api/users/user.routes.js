@@ -1,21 +1,21 @@
-import Router from "express"; //how you import express to file
-import register from "./controllers/register.js";
-import login from "./controllers/login.js";
-import signout from "./controllers/signout.js";
-import pay from "./controllers/pay.js";
+const express = require("express"); //how you import express to file
+const signUp = require("./controllers/signUp.js");
+const signIn = require("./controllers/signIn.js");
+const signOut = require("./controllers/signOut.js");
+const pay = require("./controllers/pay.js");
 // import userDashboard from "./controllers/userDashboard";
 
-const userRoutes = Router();
+const userRoutes = express.Router();
 
 //Routess..
 
-userRoutes.post("/register", register);
-userRoutes.post("/login", login);
+userRoutes.post("/signup", signUp);
+userRoutes.post("/signin", signIn);
 userRoutes.post("/create-checkout-session", pay);
-userRoutes.get("/signout", signout);
+userRoutes.get("/signout", signOut);
 
 // userRoutes.use(auth); /// every route after this middleware willbe controller by the auth
 
 // userRoutes.get("/dashboard", userDashboard);
 
-export default userRoutes;
+module.exports = userRoutes;
