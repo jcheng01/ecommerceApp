@@ -11,7 +11,6 @@ const Cart = (props) => {
   );
   const [loading, setLoading] = useState(false);
   const data = JSON.stringify(props.cart);
-  console.log(typeof data);
 
   const [email, setEmail] = useState("");
 
@@ -21,7 +20,7 @@ const Cart = (props) => {
       console.log("Form submission initiated");
       setLoading(true);
 
-      const response = await fetch("/api/user/create-checkout-session", {
+      const response = await fetch("/api/users/create-checkout-session", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-// import jsonwebtoken from "jsonwebtoken";
 const jwtHandler = require("../../handlers/jwtHandler");
 
 const signIn = async (req, res) => {
@@ -13,7 +12,7 @@ const signIn = async (req, res) => {
   if (!getUser) throw "Email does not exist"; //validates
 
   const comparePW = await bcrypt.compare(password, getUser.password); //returns boolean
-  if (!comparePW) throw "password does not match";
+  if (!comparePW) throw "Password does not match";
 
   const accessToken = jwtHandler(getUser);
   // console.log(getUser);

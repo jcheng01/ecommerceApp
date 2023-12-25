@@ -2,25 +2,24 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    confirmEmail: "",
-    password: "",
-  });
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const [usernameError, setUsernameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmpwError, setConfirmpwError] = useState("");
 
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPW: "",
+  });
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-  const buttonStyle = loading
-    ? "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline opacity-50"
-    : "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline";
 
   const handlenameBlur = (e) => {
     if (e.target.value.length < 6) {
@@ -62,11 +61,10 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-
+    console.log(JSON.stringify(formData));
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/api/users/signup", {
+      const res = await fetch("/api/users/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +74,7 @@ const Signup = () => {
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       } else {
-        console.log("response good?");
+        console.log("response good");
       }
       setLoading(false);
       navigate("/signin");
@@ -136,7 +134,6 @@ const Signup = () => {
           />
           <p className="text-red-500 text-xs italic h-4">{emailError}</p>
         </div>
-
         <div className="mb-2 ">
           <label
             htmlFor="password"
@@ -177,8 +174,11 @@ const Signup = () => {
           />
           <p className="text-red-500 text-xs italic h-4">{confirmpwError}</p>
         </div>
-        <button className={buttonStyle} type="submit" disabled={loading}>
-          Register
+        <button
+          disabled={loading}
+          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+        >
+          {loading ? "Loading..." : "Sign In"}
         </button>
       </form>
       <div className="flex gap-2 mt-5">

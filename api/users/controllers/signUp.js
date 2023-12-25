@@ -6,7 +6,7 @@ const User = require("../../models/users.models");
 const signUp = async (req, res, next) => {
   const userModel = mongoose.model("users");
 
-  const { email, username, password, confirmPW } = req.body;
+  const { username, email, password, confirmPW } = req.body;
   //Validations
 
   if (!email) throw "No email";
