@@ -39,22 +39,23 @@ const Signin = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch("/api/users/login", {
+      const res = await fetch("http://localhost:3001/api/users/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
+
       const datajson = await res;
       console.log(datajson);
-      console.log(JSON.stringify(data));
+
       if (datajson.ok === true) {
-        console.log("Login successful:", data.statusText);
-        // setMessage("Login successful!");
+        console.log("Login successful:");
         // You might handle navigation or store a token here
       }
       setLoading(false);
+
       navigate("/");
     } catch (error) {
       setLoading(false);

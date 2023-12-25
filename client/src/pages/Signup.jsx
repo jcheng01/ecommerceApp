@@ -64,7 +64,7 @@ const Signup = () => {
     console.log(JSON.stringify(formData));
     try {
       setLoading(true);
-      const res = await fetch("/api/users/signup", {
+      const res = await fetch("http://localhost:3001/api/users/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -74,7 +74,7 @@ const Signup = () => {
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       } else {
-        console.log("response good");
+        console.log(res);
       }
       setLoading(false);
       navigate("/signin");
