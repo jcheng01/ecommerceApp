@@ -1,11 +1,14 @@
 import { NavBar } from "./components/NavBar";
 import { useState, useEffect } from "react";
+import { UserProvider } from "./context/UseContext";
 import ProductDetails from "./components/ProductDetails";
 import Products from "./components/Products";
 import Cart from "./pages/Cart";
 import Home from "./pages/Home";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
+import Profile from "./pages/Profile";
+
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -61,7 +64,9 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <NavBar cart={cart} />
+        <UserProvider>
+          <NavBar cart={cart} />
+        </UserProvider>
         <main>
           <Routes>
             <Route path="/" element={<Home />}></Route>
@@ -79,6 +84,8 @@ function App() {
             <Route path="/cart" element={<Cart cart={cart} />}></Route>
             <Route path="/signup" element={<Signup />}></Route>
             <Route path="/signin" element={<Signin />}></Route>
+            <Route path="/profile" element={<Profile />}></Route>
+
             {/* <Route path="/pay"></Route> */}
           </Routes>
         </main>

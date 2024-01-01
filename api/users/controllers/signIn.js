@@ -16,9 +16,8 @@ const signIn = async (req, res) => {
 
   const accessToken = jwtHandler(getUser);
   // console.log(getUser);
-
   //success response
-  res.status(200).json({
+  res.cookie("access_token", accessToken, { httpOnly: true }).status(200).json({
     status: "success",
     message: "User logged in",
     accessToken, //passing the access token as a response

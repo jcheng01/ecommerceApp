@@ -15,6 +15,7 @@ const Signin = () => {
   };
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [message, setMessage] = useState(null);
   const handleemailBlur = (e) => {
     if (!e.target.value) {
       setEmailError("Email is required");
@@ -48,19 +49,20 @@ const Signin = () => {
       });
 
       const datajson = await res;
-      console.log(datajson);
 
       if (datajson.ok === true) {
         console.log("Login successful:");
         // You might handle navigation or store a token here
+        const token = datajson; // Adjust this based on the actual response structure
+        localStorage.setItem("accessToken", token);
+        setLoading(false);
+        navigate("/");
+      } else {
+        setLoading(false);
+        setMessage("Login failed. Password or email inccorect");
       }
-      setLoading(false);
-
-      navigate("/");
     } catch (error) {
-      setLoading(false);
       console.log("Login error:", error);
-      setMessage("Login failed. Please try again.");
     }
   };
 
@@ -126,7 +128,10 @@ const Signin = () => {
             <span className="text-blue-700">Sign up</span>
           </Link>
         </div>
-      </div>{" "}
+        {message && !passwordError && !emailError && (
+          <p className="text-red-500 mt-5">{message}</p>
+        )}
+      </div>
     </>
   );
 };

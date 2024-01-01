@@ -9,6 +9,7 @@ const Signup = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmpwError, setConfirmpwError] = useState("");
+  const [message, setMessage] = useState(null);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -72,9 +73,8 @@ const Signup = () => {
         body: JSON.stringify(formData),
       });
       if (!res.ok) {
+        setMessage("Login failed. Password or email inccorect");
         throw new Error(`HTTP error! status: ${res.status}`);
-      } else {
-        console.log(res);
       }
       setLoading(false);
       navigate("/signin");
@@ -187,6 +187,11 @@ const Signup = () => {
           <span className="text-blue-700">Sign in</span>
         </Link>
       </div>
+      {message &&
+        !confirmpwError &&
+        !usernameError &&
+        !passwordError &&
+        !emailError && <p className="text-red-500 mt-5">{message}</p>}
     </div>
   );
 };
