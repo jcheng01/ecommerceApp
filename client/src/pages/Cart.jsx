@@ -19,14 +19,16 @@ const Cart = (props) => {
     try {
       console.log("Form submission initiated");
       setLoading(true);
-
-      const response = await fetch("/api/users/create-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: data,
-      });
+      const response = await fetch(
+        "http://localhost:3001/api/users/create-checkout-session",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: data,
+        }
+      );
       if (!response.ok) {
         const errorResponse = await response.json();
         throw new Error(errorResponse.message || "Unexpected error occurred");

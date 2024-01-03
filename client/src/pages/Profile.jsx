@@ -1,4 +1,20 @@
 const Profile = () => {
+  const handleDeleteUser = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        dispatch(deleteUserFailure(data.message));
+        return;
+      }
+      dispatch(deleteUserSuccess(data));
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
+    }
+  };
   return (
     <>
       <form>
@@ -6,7 +22,7 @@ const Profile = () => {
           type="email"
           placeholder="email"
           id="email"
-          defaultValue={currentUser.email}
+          // defaultValue={currentUser.email}
           className="border p-3 rounded-lg"
         />
         <input

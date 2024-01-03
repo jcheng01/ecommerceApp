@@ -1,6 +1,5 @@
 import { NavBar } from "./components/NavBar";
 import { useState, useEffect } from "react";
-import { UserProvider } from "./context/UseContext";
 import ProductDetails from "./components/ProductDetails";
 import Products from "./components/Products";
 import Cart from "./pages/Cart";
@@ -15,9 +14,7 @@ function App() {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    // to visualize the cart in the console every time in changes
-    // you can also use React dev tools
-    // console.log(cart);
+    console.log(cart);
   }, [cart]);
 
   function handleProductAdd(newProduct) {
@@ -37,9 +34,7 @@ function App() {
         return product;
       });
       setCart(updatedCart);
-      // console.log(cart);
     } else {
-      // product is new to the cart
       setCart([
         ...cart,
         {
@@ -64,9 +59,7 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        <UserProvider>
-          <NavBar cart={cart} />
-        </UserProvider>
+        <NavBar cart={cart} />
         <main>
           <Routes>
             <Route path="/" element={<Home />}></Route>

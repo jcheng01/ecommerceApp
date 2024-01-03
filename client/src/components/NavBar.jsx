@@ -1,11 +1,14 @@
 import React from "react";
 import { FaSearch, FaShoppingCart } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { useUser } from "../context/UseContext";
+
+import { useSelector } from "react-redux";
 
 export const NavBar = (props) => {
-  const { currentUser } = useUser();
+  const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
+
+  console.log(currentUser);
 
   const cartCount = props.cart.reduce(
     (total, product) => total + product.quantity,
