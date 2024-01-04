@@ -1,4 +1,4 @@
-import { NavBar } from "./components/NavBar";
+import NavBar from "./components/NavBar";
 import { useState, useEffect } from "react";
 import ProductDetails from "./components/ProductDetails";
 import Products from "./components/Products";

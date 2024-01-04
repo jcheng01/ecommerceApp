@@ -1,21 +1,22 @@
-import React from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signInStart, signInSuccess, signInFailure } from "../redux/userSlice";
 
-const Signin = () => {
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState({});
+export default function SignIn() {
+  const [formData, setFormData] = useState({});
+  const { loading } = useSelector((state) => state.user);
   const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    setData({
-      ...data,
-      [e.target.id]: e.target.value,
-    });
-  };
+  const dispatch = useDispatch();
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [message, setMessage] = useState(null);
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
   const handleemailBlur = (e) => {
     if (!e.target.value) {
       setEmailError("Email is required");
@@ -35,105 +36,93 @@ const Signin = () => {
       setPasswordError("");
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      dispatch(signInStart());
       const res = await fetch("http://localhost:3001/api/users/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formData),
       });
-
-      const datajson = await res;
-
-      if (datajson.ok === true) {
-        console.log("Login successful:");
-        // You might handle navigation or store a token here
-        const token = datajson; // Adjust this based on the actual response structure
-        localStorage.setItem("accessToken", token);
-        setLoading(false);
+      const data = await res.json();
+      console.log(data.status);
+      if (data.status === "success") {
+        dispatch(signInSuccess(data));
         navigate("/");
       } else {
+        // dispatch(signInFailure(data.message));
         setLoading(false);
         setMessage("Login failed. Password or email inccorect");
       }
     } catch (error) {
-      console.log("Login error:", error);
+      dispatch(signInFailure(error.message));
     }
   };
-
   return (
-    <>
-      <div className="p-3 max-w-lg mx-auto">
-        <h1 className="text-2xl font-bold mb-5 text-gray-800 my-16 text-center">
-          Sign In
-        </h1>
-        <form className="flex flex-col" onSubmit={handleSubmit}>
-          <div className="mb-2 ">
-            <label
-              htmlFor="email"
-              className="block text-gray-700 text-sm font-bold "
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              required
-              className={`w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
-                emailError && "border-red-500"
-              }`}
-              placeholder="jcheng01@syr.edu"
-              onChange={handleChange}
-              onBlur={handleemailBlur}
-            />
-            <p className="text-red-500 text-xs italic h-4">{emailError}</p>
-          </div>
-          <div className="mb-2 ">
-            <label
-              htmlFor="password"
-              className="block text-gray-700 text-sm font-bold "
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              required
-              className={`w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
-                passwordError && "border-red-500"
-              }`}
-              placeholder="password"
-              onChange={handleChange}
-              onBlur={handlepasswordBlur}
-            />
-            <p className="text-red-500 text-xs italic h-4">{passwordError}</p>
-          </div>
-
-          <button
-            disabled={loading}
-            className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+    <div className="p-3 max-w-lg mx-auto">
+      <h1 className="text-3xl text-center font-semibold my-7">Sign In</h1>
+      <form className="flex flex-col" onSubmit={handleSubmit}>
+        <div className="mb-2 ">
+          <label
+            htmlFor="email"
+            className="block text-gray-700 text-sm font-bold "
           >
-            {loading ? "Loading..." : "Sign In"}
-          </button>
-          {/* <OAuth /> */}
-        </form>
-        <div className="flex gap-2 mt-5">
-          <p>Dont have an account?</p>
-          <Link to={"/signup"}>
-            <span className="text-blue-700">Sign up</span>
-          </Link>
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            required
+            className={`w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
+              emailError && "border-red-500"
+            }`}
+            placeholder="jcheng01@syr.edu"
+            onChange={handleChange}
+            onBlur={handleemailBlur}
+          />
+          <p className="text-red-500 text-xs italic h-4">{emailError}</p>
         </div>
-        {message && !passwordError && !emailError && (
-          <p className="text-red-500 mt-5">{message}</p>
-        )}
-      </div>
-    </>
-  );
-};
+        <div className="mb-2 ">
+          <label
+            htmlFor="password"
+            className="block text-gray-700 text-sm font-bold "
+          >
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            required
+            className={`w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600 ${
+              passwordError && "border-red-500"
+            }`}
+            placeholder="password"
+            onChange={handleChange}
+            onBlur={handlepasswordBlur}
+          />
+          <p className="text-red-500 text-xs italic h-4">{passwordError}</p>
+        </div>
 
-export default Signin;
+        <button
+          disabled={loading}
+          className="bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80"
+        >
+          {loading ? "Loading..." : "Sign In"}
+        </button>
+        {/* <OAuth /> */}
+      </form>
+      <div className="flex gap-2 mt-5">
+        <p>Dont have an account?</p>
+        <Link to={"/signup"}>
+          <span className="text-blue-700">Sign up</span>
+        </Link>
+      </div>
+      {message && !passwordError && !emailError && (
+        <p className="text-red-500 mt-5">{message}</p>
+      )}
+    </div>
+  );
+}
